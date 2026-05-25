@@ -202,7 +202,7 @@ function selectStep(id) {
   position: relative;
   width: 430px;
   height: 500px;
-  transform: translateX(-18px) scale(0.9);
+  transform: translateX(-18px) scale(0.84);
   transform-origin: center;
 }
 
@@ -497,7 +497,7 @@ function selectStep(id) {
 
 .step-list {
   display: grid;
-  gap: 9px;
+  gap: 6px;
 }
 
 .step-button {
@@ -505,7 +505,7 @@ function selectStep(id) {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 48px;
+  min-height: 36px;
   padding: 0 18px;
   border: 1px solid #333;
   border-radius: 8px;
@@ -532,7 +532,7 @@ function selectStep(id) {
 
 .step-button span {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 800;
 }
 
