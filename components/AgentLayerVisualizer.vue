@@ -46,10 +46,10 @@ const active = computed(() => steps[activeStep.value]);
 const camera = computed(() => {
   const step = activeStep.value;
   if (step <= 0) return { x: 0, y: 0, perspective: 920 };
-  if (step === 1) return { x: 8, y: -24, perspective: 880 };
-  if (step === 2) return { x: 14, y: -32, perspective: 840 };
-  if (step === 3) return { x: 18, y: -40, perspective: 805 };
-  return { x: 22, y: -46, perspective: 780 };
+  if (step === 1) return { x: 8, y: 24, perspective: 880 };
+  if (step === 2) return { x: 14, y: 32, perspective: 840 };
+  if (step === 3) return { x: 18, y: 40, perspective: 805 };
+  return { x: 22, y: 46, perspective: 780 };
 });
 
 const layerZ = computed(() => {
@@ -200,8 +200,10 @@ function selectStep(id) {
 
 .scene {
   position: relative;
-  width: 470px;
-  height: 540px;
+  width: 430px;
+  height: 500px;
+  transform: translateX(-18px) scale(0.9);
+  transform-origin: center;
 }
 
 .stack {
@@ -431,7 +433,7 @@ function selectStep(id) {
   flex-direction: column;
   justify-content: space-between;
   min-width: 0;
-  padding: 54px 54px 42px;
+  padding: 44px 46px 30px;
   background: #1c1c1c;
 }
 
@@ -439,7 +441,7 @@ function selectStep(id) {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 22px;
+  margin-bottom: 18px;
 }
 
 .eyebrow span {
@@ -452,15 +454,15 @@ function selectStep(id) {
 .eyebrow b {
   color: #6b7280;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 22px;
+  font-size: 19px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
 .active-card {
   position: relative;
-  min-height: 228px;
-  padding: 32px 36px;
+  min-height: 194px;
+  padding: 26px 30px;
   border: 1px solid #343434;
   border-radius: 14px;
   background: #252525;
@@ -468,19 +470,19 @@ function selectStep(id) {
 }
 
 .active-index {
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   color: #14b8a6;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .active-card h1 {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
   color: white;
-  font-size: 34px;
+  font-size: 30px;
   font-weight: 850;
   letter-spacing: 0;
 }
@@ -488,14 +490,14 @@ function selectStep(id) {
 .active-card p {
   margin: 0;
   color: #c9c9c9;
-  font-size: 21px;
+  font-size: 18px;
   font-weight: 650;
   line-height: 1.48;
 }
 
 .step-list {
   display: grid;
-  gap: 12px;
+  gap: 9px;
 }
 
 .step-button {
@@ -503,7 +505,7 @@ function selectStep(id) {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 58px;
+  min-height: 48px;
   padding: 0 18px;
   border: 1px solid #333;
   border-radius: 8px;
@@ -530,7 +532,7 @@ function selectStep(id) {
 
 .step-button span {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 17px;
+  font-size: 15px;
   font-weight: 800;
 }
 
