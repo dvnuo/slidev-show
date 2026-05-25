@@ -52,6 +52,12 @@ An agent is not just a larger prompt. It is a loop that can read context, choose
 </div>
 
 ---
+class: interactive-slide
+---
+
+<AgentLayerVisualizer />
+
+---
 
 # Prompt To Work
 
