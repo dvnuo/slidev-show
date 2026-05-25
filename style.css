@@ -1,0 +1,65 @@
+:root {
+  --slidev-theme-primary: #2167a5;
+}
+
+.slidev-layout {
+  color: #182033;
+}
+
+.slidev-layout h1 {
+  color: #111827;
+  letter-spacing: 0;
+}
+
+.slidev-layout.cover {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.86), rgba(240, 247, 255, 0.78)),
+    radial-gradient(circle at 20% 20%, rgba(20, 131, 132, 0.28), transparent 30%),
+    radial-gradient(circle at 80% 70%, rgba(197, 88, 50, 0.18), transparent 34%),
+    #f8fafc;
+}
+
+.agent-grid,
+.tool-grid,
+.risk-list {
+  display: grid;
+  gap: 18px;
+}
+
+.agent-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tool-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.agent-grid > div,
+.tool-grid > div,
+.risk-list > div {
+  border: 1px solid rgba(24, 32, 51, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.78);
+  padding: 20px 22px;
+  box-shadow: 0 12px 30px rgba(24, 32, 51, 0.08);
+}
+
+.agent-grid b,
+.tool-grid b,
+.risk-list b {
+  display: block;
+  font-size: 1.28rem;
+  margin-bottom: 0.45rem;
+}
+
+.agent-grid span,
+.tool-grid span,
+.risk-list span {
+  display: block;
+  color: rgba(24, 32, 51, 0.72);
+  line-height: 1.55;
+}
+
+.risk-list {
+  grid-template-columns: 1fr;
+}
