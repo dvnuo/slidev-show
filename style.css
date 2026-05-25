@@ -21,7 +21,13 @@
 
 .agent-grid,
 .tool-grid,
-.risk-list {
+.risk-list,
+.runtime-map,
+.config-grid,
+.memory-grid,
+.work-board,
+.review-list,
+.numbered-flow {
   display: grid;
   gap: 18px;
 }
@@ -34,9 +40,23 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.runtime-map,
+.config-grid,
+.memory-grid,
+.work-board,
+.review-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
 .agent-grid > div,
 .tool-grid > div,
-.risk-list > div {
+.risk-list > div,
+.runtime-map > div,
+.config-grid > div,
+.memory-grid > div,
+.work-board > div,
+.review-list > div,
+.numbered-flow > div {
   border: 1px solid rgba(24, 32, 51, 0.12);
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.78);
@@ -46,7 +66,13 @@
 
 .agent-grid b,
 .tool-grid b,
-.risk-list b {
+.risk-list b,
+.runtime-map b,
+.config-grid b,
+.memory-grid b,
+.work-board b,
+.review-list b,
+.numbered-flow b {
   display: block;
   font-size: 1.28rem;
   margin-bottom: 0.45rem;
@@ -54,7 +80,13 @@
 
 .agent-grid span,
 .tool-grid span,
-.risk-list span {
+.risk-list span,
+.runtime-map span,
+.config-grid span,
+.memory-grid span,
+.work-board span,
+.review-list span,
+.numbered-flow span {
   display: block;
   color: rgba(24, 32, 51, 0.72);
   line-height: 1.55;
@@ -62,4 +94,43 @@
 
 .risk-list {
   grid-template-columns: 1fr;
+}
+
+.numbered-flow {
+  grid-template-columns: 1fr;
+}
+
+.split-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.split-list > div {
+  border-left: 4px solid #2167a5;
+  padding: 8px 0 8px 22px;
+}
+
+.split-list h2 {
+  margin: 0 0 10px;
+  color: #111827;
+  font-size: 1.8rem;
+}
+
+.split-list p {
+  color: rgba(24, 32, 51, 0.74);
+  font-size: 1.05rem;
+}
+
+.split-list li {
+  margin: 0.55rem 0;
+  font-size: 1.12rem;
+}
+
+.slidev-layout table {
+  font-size: 1.02rem;
+}
+
+.slidev-layout code {
+  font-size: 0.92em;
 }
