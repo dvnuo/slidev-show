@@ -49,6 +49,27 @@
     #f8fafc;
 }
 
+.slidev-layout.cover h1 {
+  font-size: 4.2rem;
+  line-height: 1;
+}
+
+.topic-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  max-width: 980px;
+}
+
+.topic-list > div {
+  border: 1px solid rgba(24, 32, 51, 0.12);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.72);
+  padding: 10px 14px;
+  color: rgba(24, 32, 51, 0.78);
+  font-weight: 700;
+}
+
 .agent-grid,
 .tool-grid,
 .risk-list,

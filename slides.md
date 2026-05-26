@@ -1,7 +1,7 @@
 ---
 theme: default
-title: AI Agent Operating Playbook
-info: A Slidev deck about practical AI agent workflows with GitHub Copilot, tools, MCP, CLIs, memory, and automation.
+title: AI Agent Extension
+info: A Slidev deck about extending GitHub Copilot agents with instructions, tools, MCP, CLIs, memory, and automation.
 layout: cover
 class: text-left
 transition: slide-left
@@ -10,27 +10,45 @@ drawings:
 mdc: true
 ---
 
-# AI Agent Operating Playbook
+# AI Agent Extension
 
-How prompts become repeatable work through instructions, skills, tools, MCP, and CLIs
+How prompts become repeatable work through agent loops, GitHub Copilot, instructions, tools, MCP, and CLIs
 
-<div class="mt-10 text-sm opacity-70">Slidev sample deck · dvnuo/slidev-show</div>
+<div class="mt-10 topic-list">
+  <div>Agent Loop Flow</div>
+  <div>GitHub Copilot Agent Extension</div>
+  <div>Example: Setup Jira & Confluence Tool</div>
+  <div>Example: Get AWS RDS Profile</div>
+  <div>What Else?</div>
+</div>
+
+---
+
+# Topic Map
+
+<div class="numbered-flow mt-8">
+  <div><b>1. Agent Loop Flow</b><span>What the agent loop is and why tool feedback changes the work model.</span></div>
+  <div><b>2. GitHub Copilot Agent Extension</b><span>Where instructions, tools, MCP, and custom CLIs fit in the editor.</span></div>
+  <div><b>3. Setup Jira & Confluence Tool</b><span>A concrete extension path for ticket and documentation workflows.</span></div>
+  <div><b>4. Get AWS RDS Profile</b><span>A production-safe example that combines runbooks, AWS CLI, and verification.</span></div>
+  <div><b>5. What Else?</b><span>Memory, scheduled work, and code review as the next operating layer.</span></div>
+</div>
 
 ---
 layout: two-cols
 ---
 
-# The Basic Agent Runtime
+# Agent Loop Flow
 
-An agent is not just a larger prompt. It is a loop that can read context, choose tools, act, observe results, and update its next step.
+The agent is useful when it can close a loop: read context, choose an action, call a tool, observe the result, and decide the next step.
 
-<div v-clicks class="mt-8 space-y-4 text-xl">
+<div class="mt-8 space-y-4 text-xl">
 
-- A user gives the target and constraints.
-- The system prompt sets global behavior and safety rules.
-- Instructions and skills provide local operating knowledge.
-- Tools and MCP servers connect the agent to real systems.
-- Verification decides whether the work is complete.
+- Prompt gives the target and constraints.
+- Instructions provide operating rules.
+- Skills package reusable workflows.
+- Tools and MCP connect to real systems.
+- Verification decides whether to continue or stop.
 
 </div>
 
@@ -40,15 +58,21 @@ An agent is not just a larger prompt. It is a loop that can read context, choose
 
 ---
 
-# What Is Inside The Loop
+# Agent Loop Flow
 
-<div class="runtime-map mt-8">
-  <div><b>System Prompt</b><span>Global behavior, safety, tool policy, and response format.</span></div>
-  <div><b>User Prompt</b><span>The immediate request, acceptance criteria, and business context.</span></div>
-  <div><b>Instructions</b><span>Repository, workspace, team, and workflow preferences.</span></div>
-  <div><b>Skills</b><span>Reusable playbooks for tasks such as setup, diagnosis, release, and review.</span></div>
-  <div><b>Tools</b><span>Bash, file edits, browser, GitHub, cloud CLIs, test runners, and databases.</span></div>
-  <div><b>MCP</b><span>A protocol boundary for exposing external tools and data sources consistently.</span></div>
+```mermaid
+flowchart LR
+  User["User prompt"] --> Runtime["Agent runtime"]
+  Runtime --> Plan["Plan"]
+  Plan --> Action["Tool or MCP call"]
+  Action --> Observe["Observe output"]
+  Observe --> Decide{"Done?"}
+  Decide -- "No" --> Plan
+  Decide -- "Yes" --> Deliver["Deliver verified result"]
+```
+
+<div class="mt-6 text-xl opacity-80">
+The extension point is not only the model. It is the loop around the model: instructions, skills, tools, MCP, and evidence.
 </div>
 
 ---
@@ -59,128 +83,79 @@ class: interactive-slide
 
 ---
 
-# Prompt To Work
+# GitHub Copilot Agent Extension
 
-```mermaid
-flowchart LR
-  User["User prompt"] --> Runtime["Agent runtime"]
-  Runtime --> Plan["Plan"]
-  Plan --> Tool["Tool or MCP call"]
-  Tool --> Observe["Observe output"]
-  Observe --> Decide{"Done?"}
-  Decide -- "No" --> Plan
-  Decide -- "Yes" --> Deliver["Deliver verified result"]
-```
-
-<div class="mt-6 text-xl opacity-80">
-The important shift is that the agent can close the feedback loop without waiting for the user to manually run every command.
-</div>
-
----
-
-# GitHub Copilot Plugin Mental Model
-
-GitHub Copilot in the editor is valuable because it sits next to the code, terminal, source control, and project context.
+GitHub Copilot becomes more valuable when the editor agent can use local context and trusted tools instead of only generating text.
 
 <div class="config-grid mt-8">
-  <div>
-    <b>Context</b>
-    <span>Open files, workspace search, repository history, and selected code.</span>
-  </div>
-  <div>
-    <b>Instructions</b>
-    <span>Project-specific guidance that keeps the agent aligned with local standards.</span>
-  </div>
-  <div>
-    <b>Tools</b>
-    <span>Terminal, file edits, test runs, GitHub operations, and MCP-backed integrations.</span>
-  </div>
-  <div>
-    <b>Review Surface</b>
-    <span>Pull requests, comments, diffs, and issue context become natural checkpoints.</span>
-  </div>
+  <div><b>Workspace Context</b><span>Open files, repository structure, terminal output, selected code, and current diff.</span></div>
+  <div><b>Instructions</b><span>Project-specific rules that shape how the agent plans, edits, verifies, and reports.</span></div>
+  <div><b>Tools</b><span>Bash, test runners, file edits, browser checks, GitHub operations, and custom CLIs.</span></div>
+  <div><b>MCP</b><span>A consistent boundary for exposing external systems such as Jira, Confluence, cloud, and internal data.</span></div>
 </div>
 
 ---
 
-# The Two High-Leverage Knobs
+# Extension Points: Tools And Instructions
 
 <div class="split-list mt-8">
   <div>
     <h2>Tools</h2>
-    <p>Tools define what the agent can actually do.</p>
+    <p>Tools define what the agent can do.</p>
     <ul>
-      <li>Run a CLI</li>
-      <li>Read a runbook</li>
-      <li>Query a ticket system</li>
-      <li>Inspect cloud logs</li>
-      <li>Open a pull request</li>
+      <li>Run safe terminal commands</li>
+      <li>Read runbooks and tickets</li>
+      <li>Query logs or cloud metadata</li>
+      <li>Build, test, and verify changes</li>
+      <li>Post evidence back to GitHub or Jira</li>
     </ul>
   </div>
   <div>
     <h2>Instructions</h2>
-    <p>Instructions define how the agent should use those abilities.</p>
+    <p>Instructions define how the agent should act.</p>
     <ul>
-      <li>Preferred commands</li>
-      <li>Environment rules</li>
-      <li>Approval boundaries</li>
-      <li>Output formats</li>
-      <li>Definition of done</li>
+      <li>Prefer approved CLIs</li>
+      <li>Start readonly by default</li>
+      <li>Read runbooks before production work</li>
+      <li>Never reveal secrets</li>
+      <li>Return command evidence</li>
     </ul>
   </div>
 </div>
 
 ---
 
-# Why The Bash Tool Matters
+# Bash Tool: From Chat To Operator
 
-The terminal turns the agent from an advisor into an operator.
+The Bash tool is the bridge from advice to execution. It lets the agent inspect, act, and verify inside the same workflow.
 
 <div class="tool-grid mt-8">
-  <div><b>Project Discovery</b><span>List files, inspect dependencies, read configuration, and detect scripts.</span></div>
-  <div><b>Build And Test</b><span>Install packages, run unit tests, start dev servers, and build artifacts.</span></div>
-  <div><b>System Integration</b><span>Use internal CLIs, cloud CLIs, database clients, and log search commands.</span></div>
-  <div><b>Verification</b><span>Compare command output against acceptance criteria and retry with evidence.</span></div>
+  <div><b>Discover</b><span>List files, inspect package scripts, read config, and identify local conventions.</span></div>
+  <div><b>Execute</b><span>Run setup commands, tests, builds, CLIs, and safe diagnostic commands.</span></div>
+  <div><b>Integrate</b><span>Call Jira, Confluence, AWS, database clients, and internal tools through a known interface.</span></div>
+  <div><b>Verify</b><span>Compare output with acceptance criteria and retry with concrete evidence.</span></div>
 </div>
 
 ---
 
-# Instructions As A CLI Contract
+# Example: Setup Jira & Confluence Tool
 
-Use instructions to teach the agent which custom CLIs exist, how to authenticate, and what must never be done.
-
-```md
-# CLI contract
-
-- Prefer `jira`, `confluence`, `aws`, and `psql` over ad hoc API calls.
-- Read the matching runbook before touching production.
-- Use readonly profiles unless the user explicitly approves a write action.
-- Never print tokens, cookies, passwords, or full connection strings.
-- Include command summaries and verification evidence in the final response.
-```
-
----
-
-# Demo 1: Jira And Confluence CLI Setup
-
-Goal: make the agent able to read project work, create updates, and link engineering context to documentation.
+Goal: make the agent able to read tickets, search docs, draft updates, and connect engineering work to team knowledge.
 
 <div class="numbered-flow mt-8">
   <div><b>1. Package the skill</b><span>Create a reusable setup playbook for Atlassian CLI usage.</span></div>
-  <div><b>2. Download tools</b><span>Install `jira` and `confluence` into a known tool directory.</span></div>
-  <div><b>3. Configure PATH</b><span>Expose the tools to the editor terminal and agent runtime.</span></div>
-  <div><b>4. Authorize accounts</b><span>Run browser or token-based login for Jira and Confluence.</span></div>
-  <div><b>5. Write instructions</b><span>Tell the agent the safe commands and expected output style.</span></div>
+  <div><b>2. Download tools</b><span>Install `jira` and `confluence` into a stable workspace tool directory.</span></div>
+  <div><b>3. Configure PATH</b><span>Expose the tool directory to VS Code, terminal, and the agent runtime.</span></div>
+  <div><b>4. Authorize accounts</b><span>Run browser or token-based login and validate identity.</span></div>
+  <div><b>5. Add instructions</b><span>Define safe commands, approval boundaries, and evidence format.</span></div>
 </div>
 
 ---
 
-# Skill: Atlassian CLI
+# Skill And Instruction Shape
 
 ```md
 # Atlassian CLI Skill
-
-Use this skill when a task requires Jira tickets or Confluence pages.
 
 Setup:
 - Install `jira` and `confluence` into `tools/bin`.
@@ -196,25 +171,7 @@ Rules:
 
 ---
 
-# Workspace Instruction Example
-
-```md
-# Agent instructions
-
-Jira:
-- Use `jira issue view <KEY>` before editing a ticket.
-- Use `jira issue comment <KEY> --body-file <file>` for long updates.
-- Do not transition status unless the user asks.
-
-Confluence:
-- Use `confluence page search "<query>"` before creating new pages.
-- Prefer updating an existing runbook over duplicating content.
-- Include source links when summarizing pages.
-```
-
----
-
-# Demo 1 Flow
+# Jira And Confluence Flow
 
 ```mermaid
 sequenceDiagram
@@ -226,149 +183,73 @@ sequenceDiagram
   User->>Agent: "Prepare context for OPS-1827"
   Agent->>Jira: jira issue view OPS-1827
   Agent->>Confluence: confluence page search "UPS observability"
-  Agent->>Agent: Summarize, identify gaps, draft update
+  Agent->>Agent: Summarize findings and draft update
   Agent->>Jira: jira issue comment OPS-1827 --body-file update.md
-  Agent->>User: Final summary with links and next actions
-```
-
----
-
-# Demo 2: Combining More CLIs
-
-The bigger win appears when the agent can chain CLIs across systems while following the runbook.
-
-<div class="config-grid mt-8">
-  <div><b>Runbook CLI</b><span>Find the required workflow before using production tools.</span></div>
-  <div><b>AWS CLI</b><span>Authenticate with the right readonly profile and inspect logs.</span></div>
-  <div><b>Database CLI</b><span>Use readonly credentials to inspect metadata or safe query results.</span></div>
-  <div><b>Ticket CLI</b><span>Attach evidence and next steps back to the Jira ticket.</span></div>
-</div>
-
----
-
-# Example: UPS OBS Production Readonly Profile
-
-The user asks how to get the `ups-obs-prod-readonly` profile.
-
-<div class="numbered-flow mt-8">
-  <div><b>1. Read the runbook</b><span>Find the approved profile request and login process.</span></div>
-  <div><b>2. Resolve ownership</b><span>Query service metadata for UPS OBS production account and database names.</span></div>
-  <div><b>3. Authenticate</b><span>Run `aws sso login --profile ups-obs-prod-readonly`.</span></div>
-  <div><b>4. Verify access</b><span>Run a harmless identity or describe command.</span></div>
-  <div><b>5. Return exact commands</b><span>Give the user a profile command sequence with caveats.</span></div>
-</div>
-
----
-
-# Agent Reads The Runbook First
-
-```bash
-runbook search "UPS OBS prod readonly profile"
-runbook view ups-observability-production-access
-service-catalog get ups-obs --env prod --format json
-aws sso login --profile ups-obs-prod-readonly
-aws sts get-caller-identity --profile ups-obs-prod-readonly
-aws logs describe-log-groups --profile ups-obs-prod-readonly \
-  --log-group-name-prefix /aws/ups-obs/prod
+  Agent->>User: Return summary, links, and next actions
 ```
 
 <div class="mt-6 text-xl opacity-80">
-The useful behavior is not the command list alone. It is the discipline: read policy, resolve context, authenticate safely, then verify.
+The agent is no longer guessing from memory. It is reading the system of record and writing back with traceable context.
 </div>
 
 ---
 
-# Log And Database Investigation Pattern
+# Example: Get AWS RDS Profile
 
-```mermaid
-flowchart TD
-  Ticket["Ticket: production incident"] --> Runbook["Read runbook"]
-  Runbook --> Profile["Get readonly profile"]
-  Profile --> Logs["Query logs and metrics"]
-  Profile --> DB["Inspect readonly DB metadata"]
-  Logs --> Evidence["Collect evidence"]
-  DB --> Evidence
-  Evidence --> Update["Post summary to Jira"]
-  Evidence --> PR["Open fix or review PR"]
-```
+Goal: help a user obtain and verify a readonly AWS profile for RDS investigation without exposing secrets or skipping policy.
 
----
-
-# Simple Long Memory
-
-You do not need a database to start. A disciplined Markdown file can carry stable team memory.
-
-<div class="memory-grid mt-8">
-  <div><b>Stable facts</b><span>Service names, owners, environments, safe profiles, and docs locations.</span></div>
-  <div><b>Preferences</b><span>Team style, preferred CLIs, output format, and escalation rules.</span></div>
-  <div><b>Decisions</b><span>Accepted tradeoffs, migration choices, and known constraints.</span></div>
-  <div><b>Corrections</b><span>Things the agent got wrong and should not repeat.</span></div>
+<div class="numbered-flow mt-8">
+  <div><b>1. Read the runbook</b><span>Find the approved access request, login, and readonly boundaries.</span></div>
+  <div><b>2. Resolve ownership</b><span>Query service metadata for account, environment, and RDS identifiers.</span></div>
+  <div><b>3. Authenticate</b><span>Run SSO login for the readonly AWS profile.</span></div>
+  <div><b>4. Verify access</b><span>Use harmless identity and describe commands before any investigation.</span></div>
+  <div><b>5. Return exact commands</b><span>Give the user a profile command sequence with caveats and evidence.</span></div>
 </div>
 
 ---
 
-# Memory Management Instruction
+# AWS RDS Profile Command Path
 
-```md
-# Memory management
+```bash
+runbook search "RDS readonly profile"
+runbook view production-rds-readonly-access
+service-catalog get ups-obs --env prod --format json
 
-Read `AGENT_MEMORY.md` before planning non-trivial work.
-
-Update memory only when the fact is stable, useful later, and supported by a source.
-Each entry must include:
-- Date
-- Source link or command
-- Scope
-- Expiration or review trigger
-
-Do not store secrets, personal data, tokens, or temporary incident details.
+aws sso login --profile ups-obs-prod-readonly
+aws sts get-caller-identity --profile ups-obs-prod-readonly
+aws rds describe-db-instances \
+  --profile ups-obs-prod-readonly \
+  --query "DBInstances[].{id:DBInstanceIdentifier,status:DBInstanceStatus}"
 ```
+
+<div class="mt-6 text-xl opacity-80">
+The behavior to teach is the sequence: read policy, resolve context, authenticate safely, verify, then report exact commands.
+</div>
 
 ---
 
-# What Else: Scheduled Work
+# What Else?
 
-Once tools and instructions are reliable, the agent can become part of the operating rhythm.
+Once tools and instructions are reliable, the agent can become part of the team operating rhythm.
 
 <div class="work-board mt-8">
-  <div><b>Daily Triage</b><span>Read new Jira tickets, classify them, and draft missing context questions.</span></div>
-  <div><b>Runbook Hygiene</b><span>Find stale steps, validate commands, and open documentation updates.</span></div>
-  <div><b>Release Prep</b><span>Check changelog, tests, migration notes, and rollback instructions.</span></div>
-  <div><b>Incident Follow-up</b><span>Collect evidence, draft timeline, and link PRs, logs, and tickets.</span></div>
+  <div><b>Long Memory</b><span>Use a managed Markdown memory file for stable service facts, owner rules, and recurring corrections.</span></div>
+  <div><b>Scheduled Work</b><span>Let the agent triage tickets, validate runbooks, check release readiness, and prepare follow-ups.</span></div>
+  <div><b>GitHub Review</b><span>Ask for review that focuses on behavior, risk, tests, migrations, rollout, and observability.</span></div>
+  <div><b>Runbook Hygiene</b><span>Have the agent periodically test docs against real commands and open updates when steps drift.</span></div>
 </div>
 
----
-
-# What Else: GitHub Review
-
-Ask the agent to review like a teammate, not like a formatter.
-
-<div class="review-list mt-8">
-  <div><b>Behavior</b><span>Does the change satisfy the requirement without hidden regressions?</span></div>
-  <div><b>Risk</b><span>What can fail in production, and how would we detect it?</span></div>
-  <div><b>Tests</b><span>Are the important paths covered with the right level of confidence?</span></div>
-  <div><b>Operations</b><span>Are config, migrations, rollout, rollback, and observability handled?</span></div>
-</div>
-
----
-
-# Operating Rules
-
-<div class="risk-list mt-8">
-  <div><b>Start readonly</b><span>Default to read and summarize. Escalate before write, delete, deploy, or spend.</span></div>
-  <div><b>Make tools explicit</b><span>Document which CLIs exist, where they live, and how they are validated.</span></div>
-  <div><b>Prefer runbooks</b><span>The agent should read the approved workflow before improvising.</span></div>
-  <div><b>Require evidence</b><span>Every important answer should include the commands, files, links, or tests that support it.</span></div>
-</div>
-
----
-layout: center
 ---
 
 # Closing Thought
 
 <div class="text-3xl leading-relaxed mt-8">
-The best agents are not magic chat windows. They are well-instructed operators with safe tools, observable actions, and clear ownership.
+AI Agent Extension is not about making chat longer. It is about giving the agent trusted tools, clear instructions, and verified feedback loops.
 </div>
 
-<div class="mt-10 opacity-70">Give them context, give them tools, give them boundaries, then give them real work.</div>
+<div class="risk-list mt-10">
+  <div><b>Give it context</b><span>Project files, tickets, docs, runbooks, and current diffs.</span></div>
+  <div><b>Give it tools</b><span>Bash, CLIs, MCP servers, browser checks, GitHub, and cloud access.</span></div>
+  <div><b>Give it boundaries</b><span>Readonly defaults, approval rules, secret handling, and definition of done.</span></div>
+  <div><b>Give it real work</b><span>Tickets, reviews, setup tasks, investigations, and repeatable operations.</span></div>
+</div>
