@@ -435,7 +435,7 @@ function selectStep(id) {
   gap: 14px;
   min-width: 0;
   min-height: 0;
-  padding: 38px 42px 22px;
+  padding: 38px 42px 58px;
   background: #1c1c1c;
 }
 
