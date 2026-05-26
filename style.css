@@ -70,6 +70,10 @@
   font-weight: 700;
 }
 
+.topic-list > div:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
 .agent-grid,
 .tool-grid,
 .risk-list,

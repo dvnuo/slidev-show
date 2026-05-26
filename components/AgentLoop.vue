@@ -29,6 +29,7 @@
       <span>Instructions</span>
       <span>Skills</span>
       <span>Tools</span>
+      <span>Memory</span>
     </div>
 
     <div class="loop-node plan step-card"><span class="step-index">02</span><b>Plan</b></div>
@@ -36,7 +37,7 @@
     <div class="loop-node observe step-card"><span class="step-index">04</span><b>Observe</b></div>
     <div class="loop-node verify step-card"><span class="step-index">05</span><b>Verify</b><small>retry or finish</small></div>
 
-    <div class="mcp-card">MCP Servers</div>
+    <div class="memory-card">Memory Store</div>
     <div class="done-card step-card">
       <span class="stage-tag done">Done</span>
       <b>Verified Result</b>
@@ -105,7 +106,7 @@
 }
 
 .prompt-card,
-.mcp-card,
+.memory-card,
 .agent-core,
 .loop-node,
 .done-card {
@@ -244,7 +245,7 @@
   animation-delay: 4.75s;
 }
 
-.mcp-card {
+.memory-card {
   right: 9%;
   bottom: 8%;
   width: 96px;

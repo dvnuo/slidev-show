@@ -25,9 +25,9 @@ const steps = [
   },
   {
     id: 3,
-    title: "Tools And MCP",
-    subtitle: "External action",
-    desc: "Tools and MCP servers let the agent read files, run bash, call CLIs, inspect GitHub, and query external systems.",
+    title: "Tools And Memory",
+    subtitle: "Action + memory",
+    desc: "Tools let the agent act through trusted commands; memory keeps stable context, team rules, and reusable decisions available.",
     accent: "emerald",
   },
   {
@@ -128,7 +128,7 @@ function selectStep(id) {
             <div class="tool-node">bash</div>
             <div class="tool-node">jira</div>
             <div class="tool-node">aws</div>
-            <div class="tool-node">mcp</div>
+            <div class="tool-node">memory</div>
           </div>
 
           <div

@@ -1,7 +1,7 @@
 ---
 theme: default
 title: AI Agent Extension
-info: A Slidev deck about extending GitHub Copilot agents with instructions, tools, MCP, CLIs, memory, and automation.
+info: A Slidev deck about extending GitHub Copilot agents with instructions, tools, memory, CLIs, and automation.
 layout: cover
 class: text-left
 transition: slide-left
@@ -12,13 +12,11 @@ mdc: true
 
 # AI Agent Extension
 
-How prompts become repeatable work through agent loops, GitHub Copilot, instructions, tools, MCP, and CLIs
+How prompts become repeatable work through agent loops, GitHub Copilot, tools, memory, and CLIs
 
 <div class="mt-10 topic-list">
   <div>Agent Loop Flow</div>
   <div>GitHub Copilot Agent Extension</div>
-  <div>Example: Setup Jira & Confluence Tool</div>
-  <div>Example: Get AWS RDS Profile</div>
   <div>What Else?</div>
 </div>
 
@@ -27,11 +25,9 @@ How prompts become repeatable work through agent loops, GitHub Copilot, instruct
 # Topic Map
 
 <div class="numbered-flow mt-8">
-  <div><b>1. Agent Loop Flow</b><span>What the agent loop is and why tool feedback changes the work model.</span></div>
-  <div><b>2. GitHub Copilot Agent Extension</b><span>Where instructions, tools, MCP, and custom CLIs fit in the editor.</span></div>
-  <div><b>3. Setup Jira & Confluence Tool</b><span>A concrete extension path for ticket and documentation workflows.</span></div>
-  <div><b>4. Get AWS RDS Profile</b><span>A production-safe example that combines runbooks, AWS CLI, and verification.</span></div>
-  <div><b>5. What Else?</b><span>Memory, scheduled work, and code review as the next operating layer.</span></div>
+  <div><b>1. Agent Loop Flow</b><span>How an agent moves from prompt to action, observation, verification, and result.</span></div>
+  <div><b>2. GitHub Copilot Agent Extension</b><span>Tools and memory as the two practical extension surfaces inside the editor.</span></div>
+  <div><b>3. What Else?</b><span>Scheduled work, code review, and runbook hygiene as the next operating layer.</span></div>
 </div>
 
 ---
@@ -47,7 +43,7 @@ The agent is useful when it can close a loop: read context, choose an action, ca
 - Prompt gives the target and constraints.
 - Instructions provide operating rules.
 - Skills package reusable workflows.
-- Tools and MCP connect to real systems.
+- Tools and memory connect actions to durable context and real systems.
 - Verification decides whether to continue or stop.
 
 </div>
@@ -56,24 +52,6 @@ The agent is useful when it can close a loop: read context, choose an action, ca
 
 <AgentLoop />
 
----
-
-# Agent Loop Flow
-
-```mermaid
-flowchart LR
-  User["User prompt"] --> Runtime["Agent runtime"]
-  Runtime --> Plan["Plan"]
-  Plan --> Action["Tool or MCP call"]
-  Action --> Observe["Observe output"]
-  Observe --> Decide{"Done?"}
-  Decide -- "No" --> Plan
-  Decide -- "Yes" --> Deliver["Deliver verified result"]
-```
-
-<div class="mt-6 text-xl opacity-80">
-The extension point is not only the model. It is the loop around the model: instructions, skills, tools, MCP, and evidence.
-</div>
 
 ---
 class: interactive-slide
@@ -90,55 +68,40 @@ GitHub Copilot becomes more valuable when the editor agent can use local context
 <div class="config-grid mt-8">
   <div><b>Workspace Context</b><span>Open files, repository structure, terminal output, selected code, and current diff.</span></div>
   <div><b>Instructions</b><span>Project-specific rules that shape how the agent plans, edits, verifies, and reports.</span></div>
-  <div><b>Tools</b><span>Bash, test runners, file edits, browser checks, GitHub operations, and custom CLIs.</span></div>
-  <div><b>MCP</b><span>A consistent boundary for exposing external systems such as Jira, Confluence, cloud, and internal data.</span></div>
+  <div><b>Tools</b><span>Bash, tests, file edits, browser checks, GitHub operations, and approved custom CLIs.</span></div>
+  <div><b>Memory</b><span>Stable workspace notes, service facts, reusable decisions, and correction history.</span></div>
 </div>
 
 ---
 
-# Extension Points: Tools And Instructions
+# Tools: Theory
+
+Tools turn Copilot from a text generator into an operator that can inspect, execute, and verify work inside the editor.
 
 <div class="split-list mt-8">
   <div>
-    <h2>Tools</h2>
-    <p>Tools define what the agent can do.</p>
+    <h2>Capabilities</h2>
     <ul>
-      <li>Run safe terminal commands</li>
-      <li>Read runbooks and tickets</li>
-      <li>Query logs or cloud metadata</li>
-      <li>Build, test, and verify changes</li>
-      <li>Post evidence back to GitHub or Jira</li>
+      <li>Inspect files, diffs, terminal output, and package scripts</li>
+      <li>Run builds, tests, linters, and safe diagnostic commands</li>
+      <li>Call approved CLIs for Jira, Confluence, AWS, and internal systems</li>
+      <li>Return command evidence instead of guesses</li>
     </ul>
   </div>
   <div>
-    <h2>Instructions</h2>
-    <p>Instructions define how the agent should act.</p>
+    <h2>Boundaries</h2>
     <ul>
-      <li>Prefer approved CLIs</li>
-      <li>Start readonly by default</li>
-      <li>Read runbooks before production work</li>
-      <li>Never reveal secrets</li>
-      <li>Return command evidence</li>
+      <li>Readonly first for production systems</li>
+      <li>Explicit approval before writes or status changes</li>
+      <li>No secret exposure in prompts, logs, or summaries</li>
+      <li>Verification before reporting completion</li>
     </ul>
   </div>
 </div>
 
 ---
 
-# Bash Tool: From Chat To Operator
-
-The Bash tool is the bridge from advice to execution. It lets the agent inspect, act, and verify inside the same workflow.
-
-<div class="tool-grid mt-8">
-  <div><b>Discover</b><span>List files, inspect package scripts, read config, and identify local conventions.</span></div>
-  <div><b>Execute</b><span>Run setup commands, tests, builds, CLIs, and safe diagnostic commands.</span></div>
-  <div><b>Integrate</b><span>Call Jira, Confluence, AWS, database clients, and internal tools through a known interface.</span></div>
-  <div><b>Verify</b><span>Compare output with acceptance criteria and retry with concrete evidence.</span></div>
-</div>
-
----
-
-# Example: Setup Jira & Confluence Tool
+# Tools Example: Setup Jira & Confluence
 
 Goal: make the agent able to read tickets, search docs, draft updates, and connect engineering work to team knowledge.
 
@@ -152,7 +115,7 @@ Goal: make the agent able to read tickets, search docs, draft updates, and conne
 
 ---
 
-# Skill And Instruction Shape
+# Tools Example: Instruction Contract
 
 ```md
 # Atlassian CLI Skill
@@ -171,7 +134,7 @@ Rules:
 
 ---
 
-# Jira And Confluence Flow
+# Tools Example: Runtime Flow
 
 ```mermaid
 sequenceDiagram
@@ -189,7 +152,48 @@ sequenceDiagram
 ```
 
 <div class="mt-6 text-xl opacity-80">
-The agent is no longer guessing from memory. It is reading the system of record and writing back with traceable context.
+The agent is no longer guessing from stale chat. It is reading the system of record and writing back with traceable context.
+</div>
+
+---
+
+# Memory: Theory
+
+Memory gives Copilot durable context that survives the current chat, but it should be managed like project documentation.
+
+<div class="split-list mt-8">
+  <div>
+    <h2>Keep</h2>
+    <ul>
+      <li>Stable service facts, owners, and environment names</li>
+      <li>Recurring corrections and team preferences</li>
+      <li>Runbook pointers and known safe commands</li>
+      <li>Decision records that affect future agent work</li>
+    </ul>
+  </div>
+  <div>
+    <h2>Govern</h2>
+    <ul>
+      <li>Store memory in reviewed Markdown files</li>
+      <li>Prefer facts over guesses or private chat fragments</li>
+      <li>Expire stale entries with dates or owners</li>
+      <li>Never store secrets, tokens, or personal data</li>
+    </ul>
+  </div>
+</div>
+
+---
+
+# Memory Example: Setup
+
+Goal: give the agent stable context without depending on chat history or hidden assumptions.
+
+<div class="numbered-flow mt-8">
+  <div><b>1. Create memory files</b><span>Add `.github/copilot-instructions.md`, `.agent/memory.md`, and `.agent/runbook-index.md`.</span></div>
+  <div><b>2. Define the contract</b><span>Tell Copilot when to read memory, when it may update memory, and how to cite evidence.</span></div>
+  <div><b>3. Seed stable facts</b><span>Record service owners, approved CLIs, readonly defaults, and runbook links.</span></div>
+  <div><b>4. Review changes</b><span>Memory updates go through normal diff review before becoming durable context.</span></div>
+  <div><b>5. Use it in tasks</b><span>The agent reads memory before Jira, Confluence, AWS, or production-support workflows.</span></div>
 </div>
 
 ---
@@ -230,11 +234,11 @@ The behavior to teach is the sequence: read policy, resolve context, authenticat
 
 # What Else?
 
-Once tools and instructions are reliable, the agent can become part of the team operating rhythm.
+Once tools and memory are reliable, the agent can become part of the team operating rhythm.
 
 <div class="work-board mt-8">
-  <div><b>Long Memory</b><span>Use a managed Markdown memory file for stable service facts, owner rules, and recurring corrections.</span></div>
   <div><b>Scheduled Work</b><span>Let the agent triage tickets, validate runbooks, check release readiness, and prepare follow-ups.</span></div>
+  <div><b>Team Backlog</b><span>Assign narrow Jira tickets with clear acceptance criteria, repo access, and verification commands.</span></div>
   <div><b>GitHub Review</b><span>Ask for review that focuses on behavior, risk, tests, migrations, rollout, and observability.</span></div>
   <div><b>Runbook Hygiene</b><span>Have the agent periodically test docs against real commands and open updates when steps drift.</span></div>
 </div>
@@ -244,12 +248,12 @@ Once tools and instructions are reliable, the agent can become part of the team 
 # Closing Thought
 
 <div class="text-3xl leading-relaxed mt-8">
-AI Agent Extension is not about making chat longer. It is about giving the agent trusted tools, clear instructions, and verified feedback loops.
+AI Agent Extension is not about making chat longer. It is about giving the agent trusted tools, useful memory, clear boundaries, and verified feedback loops.
 </div>
 
 <div class="risk-list mt-10">
   <div><b>Give it context</b><span>Project files, tickets, docs, runbooks, and current diffs.</span></div>
-  <div><b>Give it tools</b><span>Bash, CLIs, MCP servers, browser checks, GitHub, and cloud access.</span></div>
+  <div><b>Give it tools</b><span>Bash, CLIs, browser checks, GitHub, cloud access, and internal service commands.</span></div>
   <div><b>Give it boundaries</b><span>Readonly defaults, approval rules, secret handling, and definition of done.</span></div>
   <div><b>Give it real work</b><span>Tickets, reviews, setup tasks, investigations, and repeatable operations.</span></div>
 </div>
