@@ -48,7 +48,7 @@
 <style scoped>
 .agent-loop {
   position: relative;
-  width: min(460px, 100%);
+  width: min(450px, 100%);
   aspect-ratio: 1.05;
   margin: 1.5rem auto 0;
   border: 1px solid rgba(40, 52, 74, 0.16);
@@ -77,25 +77,25 @@
 
 .flow-path {
   fill: none;
-  stroke-width: 2.4;
+  stroke-width: 3.4;
   stroke-linecap: round;
 }
 
 .main-path {
-  stroke: rgba(33, 103, 165, 0.38);
-  stroke-dasharray: 8 8;
+  stroke: rgba(33, 103, 165, 0.7);
+  stroke-dasharray: 9 8;
   marker-end: url("#arrow");
   animation: path-move 2.8s linear infinite;
 }
 
 .retry-path {
-  stroke: rgba(197, 88, 50, 0.42);
-  stroke-dasharray: 5 8;
+  stroke: rgba(197, 88, 50, 0.7);
+  stroke-dasharray: 6 9;
   marker-end: url("#arrow");
 }
 
 .done-path {
-  stroke: rgba(22, 163, 74, 0.58);
+  stroke: rgba(22, 163, 74, 0.86);
   marker-end: url("#done-arrow");
 }
 
@@ -113,8 +113,8 @@
   border-radius: 8px;
   border: 1px solid rgba(36, 47, 68, 0.12);
   background: rgba(255, 255, 255, 0.92);
-  box-shadow: 0 10px 26px rgba(17, 35, 64, 0.12);
-  z-index: 2;
+  box-shadow: 0 7px 18px rgba(17, 35, 64, 0.08);
+  z-index: 3;
 }
 
 .step-card {
@@ -122,30 +122,30 @@
 }
 
 .prompt-card {
-  left: 7%;
-  top: 7%;
-  width: 158px;
-  padding: 12px 14px;
+  left: 8%;
+  top: 8%;
+  width: 118px;
+  padding: 8px 10px;
   animation-delay: 0s;
 }
 
 .step-index {
   display: inline-block;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: rgba(33, 103, 165, 0.72);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
   font-weight: 800;
 }
 
 .stage-tag {
   position: absolute;
-  top: -12px;
+  top: -10px;
   right: 10px;
-  padding: 3px 8px;
+  padding: 2px 7px;
   border-radius: 999px;
   color: white;
-  font-size: 0.58rem;
+  font-size: 0.5rem;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -164,19 +164,21 @@
 .loop-node small {
   display: block;
   color: rgba(24, 32, 51, 0.62);
-  font-size: 0.68rem;
+  font-size: 0.52rem;
 }
 
 .prompt-card b {
   display: block;
   color: #111827;
+  font-size: 0.8rem;
+  line-height: 1.08;
 }
 
 .agent-core {
   left: 50%;
   top: 50%;
-  width: 162px;
-  padding: 16px;
+  width: 116px;
+  padding: 10px;
   transform: translate(-50%, -50%);
   background: #111827;
   color: white;
@@ -186,22 +188,22 @@
 
 .agent-core b {
   display: block;
-  margin-bottom: 10px;
-  font-size: 1.25rem;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
 }
 
 .agent-core span {
   display: inline-block;
-  margin: 3px;
-  padding: 4px 8px;
+  margin: 2px;
+  padding: 2px 6px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.12);
-  font-size: 0.72rem;
+  font-size: 0.5rem;
 }
 
 .loop-node {
-  width: 116px;
-  min-height: 58px;
+  width: 86px;
+  min-height: 40px;
   display: grid;
   place-items: center;
   color: #182033;
@@ -210,52 +212,55 @@
 }
 
 .loop-node b {
+  font-size: 0.8rem;
   line-height: 1.05;
 }
 
 .plan {
-  left: 57%;
-  top: 10%;
+  left: 62%;
+  top: 12%;
   transform: translateX(-50%);
   animation-delay: 1.15s;
 }
 
 .call {
-  right: 7%;
+  right: 8%;
   top: 50%;
   transform: translateY(-50%);
   animation-delay: 2.35s;
 }
 
 .observe {
-  left: 50%;
-  bottom: 10%;
+  left: 54%;
+  bottom: 9%;
   transform: translateX(-50%);
   animation-delay: 3.55s;
 }
 
 .verify {
-  left: 7%;
+  left: 8%;
   top: 50%;
   transform: translateY(-50%);
   animation-delay: 4.75s;
 }
 
 .mcp-card {
-  right: 7%;
-  bottom: 7%;
-  width: 136px;
-  padding: 12px 14px;
+  right: 9%;
+  bottom: 8%;
+  width: 96px;
+  padding: 8px 10px;
   color: #2167a5;
   font-weight: 700;
+  font-size: 0.82rem;
+  line-height: 1.14;
   text-align: center;
 }
 
 .done-card {
-  left: 7%;
+  left: 8%;
   bottom: 8%;
-  width: 150px;
-  padding: 11px 14px;
+  width: 116px;
+  padding: 8px 10px;
   border-color: rgba(22, 163, 74, 0.2);
   background: rgba(240, 253, 244, 0.96);
   color: #14532d;
@@ -264,6 +269,7 @@
 
 .done-card b {
   display: block;
+  font-size: 0.8rem;
   line-height: 1.08;
 }
 
@@ -278,11 +284,11 @@
   13%,
   100% {
     border-color: rgba(36, 47, 68, 0.12);
-    box-shadow: 0 10px 26px rgba(17, 35, 64, 0.12);
+    box-shadow: 0 7px 18px rgba(17, 35, 64, 0.08);
   }
   6% {
     border-color: rgba(33, 103, 165, 0.55);
-    box-shadow: 0 14px 30px rgba(33, 103, 165, 0.24);
+    box-shadow: 0 10px 22px rgba(33, 103, 165, 0.2);
   }
 }
 </style>
