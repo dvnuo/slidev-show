@@ -429,11 +429,13 @@ function selectStep(id) {
 }
 
 .control-pane {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: auto minmax(0, auto);
+  align-content: space-between;
+  gap: 14px;
   min-width: 0;
-  padding: 44px 46px 30px;
+  min-height: 0;
+  padding: 38px 42px 22px;
   background: #1c1c1c;
 }
 
@@ -441,7 +443,7 @@ function selectStep(id) {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 }
 
 .eyebrow span {
@@ -461,8 +463,8 @@ function selectStep(id) {
 
 .active-card {
   position: relative;
-  min-height: 194px;
-  padding: 26px 30px;
+  min-height: 166px;
+  padding: 22px 28px;
   border: 1px solid #343434;
   border-radius: 14px;
   background: #252525;
@@ -470,34 +472,36 @@ function selectStep(id) {
 }
 
 .active-index {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
   color: #14b8a6;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .active-card h1 {
-  margin: 0 0 14px;
+  margin: 0 0 10px;
   color: white;
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 850;
   letter-spacing: 0;
+  line-height: 1.1;
 }
 
 .active-card p {
   margin: 0;
   color: #c9c9c9;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 650;
-  line-height: 1.48;
+  line-height: 1.4;
 }
 
 .step-list {
   display: grid;
-  gap: 6px;
+  gap: 5px;
+  min-height: 0;
 }
 
 .step-button {
@@ -505,8 +509,8 @@ function selectStep(id) {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 36px;
-  padding: 0 18px;
+  min-height: 32px;
+  padding: 0 16px;
   border: 1px solid #333;
   border-radius: 8px;
   background: #202020;
@@ -532,7 +536,7 @@ function selectStep(id) {
 
 .step-button span {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 800;
 }
 
