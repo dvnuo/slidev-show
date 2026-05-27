@@ -8,6 +8,7 @@ const parts = [
     label: "Global rules",
     desc: "Non-negotiable model behavior: safety policy, identity, tool-use limits, and global response constraints.",
     sample: "system: follow policy, use tools only when allowed",
+    tokens: ["policy", "identity", "tool limits"],
     accent: "cyan",
   },
   {
@@ -16,6 +17,7 @@ const parts = [
     label: "Team rules",
     desc: "Repository and team instructions that tell the agent how to work here: commands, coding style, review rules, and boundaries.",
     sample: "instructions: read runbooks, prefer approved CLIs",
+    tokens: ["repo rules", "CLI contract", "review style"],
     accent: "blue",
   },
   {
@@ -24,6 +26,7 @@ const parts = [
     label: "Visible prompt",
     desc: "The user goal, constraints, acceptance criteria, and any explicit priority. This is the part people usually call the prompt.",
     sample: "user: setup Jira and Confluence tools for this workspace",
+    tokens: ["goal", "constraints", "acceptance"],
     accent: "violet",
   },
   {
@@ -32,6 +35,7 @@ const parts = [
     label: "Relevant facts",
     desc: "Runtime context selected for the task: open files, diffs, terminal output, memory, runbook snippets, tickets, and previous observations.",
     sample: "context: selected files, current diff, memory.md, OPS-1827",
+    tokens: ["files", "diff", "memory", "runbook"],
     accent: "emerald",
   },
   {
@@ -40,6 +44,7 @@ const parts = [
     label: "Action surface",
     desc: "The tool list, schemas, permissions, and calling rules. This tells the model what actions are available and how tool results return.",
     sample: "tools: bash(cmd), jira(issue), browser(url), git(diff)",
+    tokens: ["bash", "jira", "browser", "git"],
     accent: "amber",
   },
   {
@@ -48,6 +53,7 @@ const parts = [
     label: "Finish shape",
     desc: "The expected output format: evidence, command results, open risks, next steps, and the definition of done for the current task.",
     sample: "response: summary, evidence, changed files, verification",
+    tokens: ["summary", "evidence", "risks"],
     accent: "rose",
   },
 ];
@@ -55,45 +61,68 @@ const parts = [
 const activePart = ref(2);
 const active = computed(() => parts[activePart.value]);
 
+const camera = computed(() => ({
+  x: 8 + activePart.value * 2.2,
+  y: 18 + activePart.value * 4.3,
+  perspective: 920 - activePart.value * 26,
+}));
+
+function layerStyle(part) {
+  const visible = part.id <= activePart.value;
+  const depth = 48 + part.id * 62;
+  const lift = part.id * 7;
+  return {
+    opacity: visible ? 1 : 0.08,
+    pointerEvents: visible ? "auto" : "none",
+    transform: `translate3d(${part.id * 7}px, ${lift}px, ${depth}px)`,
+  };
+}
+
 function selectPart(id) {
   activePart.value = id;
 }
 </script>
 
 <template>
-  <section class="prompt-payload" aria-label="LLM prompt payload breakdown">
+  <section class="prompt-payload" aria-label="Interactive LLM prompt payload layer stack">
     <div class="visual-pane">
       <div class="visual-title">
         <b>LLM Prompt Payload</b>
-        <span>The visible user prompt is only one layer. The agent runtime builds a structured model request around it.</span>
+        <span>The user prompt is one layer inside a structured model request.</span>
       </div>
 
-      <div class="payload-window">
-        <div class="window-top">
-          <span class="dot red" />
-          <span class="dot yellow" />
-          <span class="dot green" />
-          <span class="address">model-request.payload</span>
-        </div>
+      <div class="scene" :style="{ perspective: `${camera.perspective}px` }">
+        <div class="stack" :style="{ transform: `rotateX(${camera.x}deg) rotateY(${camera.y}deg)` }">
+          <div class="base-layer">
+            <div class="window-top">
+              <span class="dot red" />
+              <span class="dot yellow" />
+              <span class="dot green" />
+              <span class="address">model-request.payload</span>
+            </div>
+            <div class="runtime-grid">
+              <div class="terminal-mark">LLM</div>
+              <div>Structured model request</div>
+            </div>
+          </div>
 
-        <div class="payload-body">
           <button
             v-for="part in parts"
             :key="part.id"
             type="button"
-            class="payload-card"
+            class="payload-layer"
             :class="[`accent-${part.accent}`, { active: part.id === activePart }]"
+            :style="layerStyle(part)"
             @click="selectPart(part.id)"
           >
-            <span class="part-index">0{{ part.id + 1 }}</span>
-            <b>{{ part.title }}</b>
-            <small>{{ part.label }}</small>
+            <div class="layer-heading">
+              <span>0{{ part.id + 1 }} // {{ part.title }}</span>
+              <i>{{ part.label }}</i>
+            </div>
+            <div class="token-grid">
+              <span v-for="token in part.tokens" :key="token">{{ token }}</span>
+            </div>
           </button>
-        </div>
-
-        <div class="payload-formula">
-          <span>model call</span>
-          <b>rules + user request + context + tools + response contract</b>
         </div>
       </div>
     </div>
@@ -107,7 +136,7 @@ function selectPart(id) {
 
         <div class="page-summary">
           <b>Main point</b>
-          <p>The LLM does not receive raw chat text alone. It receives a layered request that controls behavior, supplies context, and defines available actions.</p>
+          <p>The LLM receives a layered payload: rules, user request, context, tool contracts, and the expected response shape.</p>
         </div>
 
         <div class="active-card" :class="`accent-${active.accent}`">
@@ -138,7 +167,7 @@ function selectPart(id) {
 <style scoped>
 .prompt-payload {
   display: grid;
-  grid-template-columns: minmax(0, 1.28fr) minmax(430px, 0.92fr);
+  grid-template-columns: minmax(0, 1.34fr) minmax(430px, 0.9fr);
   height: 100%;
   min-height: 100%;
   overflow: hidden;
@@ -154,61 +183,84 @@ function selectPart(id) {
   overflow: hidden;
   border-right: 1px solid #303030;
   background:
-    radial-gradient(circle at 38% 45%, rgba(20, 184, 166, 0.14), transparent 28%),
+    radial-gradient(circle at 44% 42%, rgba(20, 184, 166, 0.14), transparent 30%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 42%),
     #181818;
 }
 
 .visual-title {
   position: absolute;
-  top: 30px;
+  top: 32px;
   left: 52px;
   right: 52px;
-  z-index: 3;
-  max-width: 650px;
+  z-index: 5;
+  max-width: 680px;
 }
 
 .visual-title b {
   display: block;
   color: #f8fafc;
-  font-size: 25px;
+  font-size: 30px;
   font-weight: 850;
   line-height: 1.05;
 }
 
 .visual-title span {
   display: block;
-  margin-top: 7px;
-  max-width: 560px;
+  margin-top: 8px;
   color: #a5adba;
-  font-size: 10px;
+  font-size: 14px;
   font-weight: 650;
-  line-height: 1.25;
+  line-height: 1.32;
 }
 
-.payload-window {
-  width: min(720px, 82%);
-  margin-top: 96px;
-  border: 1px solid #343434;
+.scene {
+  position: relative;
+  width: 430px;
+  height: 500px;
+  margin-top: 64px;
+  transform: translateX(-92px) scale(0.84);
+  transform-origin: center;
+}
+
+.stack {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 720ms ease;
+}
+
+.base-layer,
+.payload-layer {
+  position: absolute;
+  left: 44px;
+  right: 44px;
   border-radius: 16px;
-  background: rgba(31, 31, 31, 0.95);
-  box-shadow: 0 34px 80px rgba(0, 0, 0, 0.42);
+  transform-style: preserve-3d;
+}
+
+.base-layer {
+  inset: 0;
   overflow: hidden;
+  border: 1px solid #3d3d3d;
+  background: rgba(31, 31, 31, 0.96);
+  box-shadow: 0 32px 70px rgba(0, 0, 0, 0.48);
 }
 
 .window-top {
   display: flex;
   align-items: center;
-  gap: 7px;
-  height: 34px;
-  padding: 0 12px;
+  gap: 9px;
+  height: 44px;
+  padding: 0 14px;
   border-bottom: 1px solid #343434;
   background: #202020;
 }
 
 .dot {
-  width: 9px;
-  height: 9px;
+  width: 12px;
+  height: 12px;
   border-radius: 999px;
 }
 
@@ -227,7 +279,7 @@ function selectPart(id) {
 .address {
   display: flex;
   align-items: center;
-  height: 20px;
+  height: 24px;
   flex: 1;
   margin-left: 8px;
   padding: 0 12px;
@@ -239,91 +291,103 @@ function selectPart(id) {
   font-size: 12px;
 }
 
-.payload-body {
+.runtime-grid {
+  position: relative;
   display: grid;
-  gap: 6px;
-  padding: 14px;
-  background-image: radial-gradient(#333 1px, transparent 1px);
-  background-size: 18px 18px;
-}
-
-.payload-card {
-  display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) 122px;
-  align-items: center;
-  gap: 10px;
-  min-height: 38px;
-  padding: 0 12px;
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 10px;
-  background: rgba(20, 20, 20, 0.86);
-  color: #e5e7eb;
-  text-align: left;
-  transition:
-    border-color 180ms ease,
-    background 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
-}
-
-.payload-card:hover,
-.payload-card.active {
-  transform: translateX(6px);
-  border-color: currentColor;
-  background: rgba(15, 23, 42, 0.92);
-}
-
-.part-index,
-.payload-card small,
-.payload-formula span,
-.eyebrow b,
-.active-index,
-.page-summary b,
-.step-button span {
+  place-items: center;
+  height: calc(100% - 44px);
+  color: #7f8794;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  background-image: radial-gradient(#333 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
-.part-index {
-  color: currentColor;
-  font-size: 12px;
+.terminal-mark {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 12px;
+  border: 1px solid #3d3d3d;
+  border-radius: 12px;
+  color: #14b8a6;
   font-weight: 900;
 }
 
-.payload-card b {
-  font-size: 15px;
-  font-weight: 850;
-  line-height: 1.1;
+.payload-layer {
+  top: 116px;
+  min-height: 204px;
+  padding: 16px;
+  border: 1px solid currentColor;
+  background: rgba(17, 24, 39, 0.9);
+  color: #e5e7eb;
+  text-align: left;
+  box-shadow: 0 26px 56px rgba(0, 0, 0, 0.34);
+  transition:
+    transform 720ms ease,
+    opacity 420ms ease,
+    border-color 280ms ease,
+    background 280ms ease;
 }
 
-.payload-card small {
-  justify-self: end;
-  color: #9ca3af;
-  font-size: 9.5px;
-  font-weight: 800;
+.payload-layer.active {
+  background: rgba(15, 23, 42, 0.96);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.4),
+    0 0 0 1px currentColor inset;
+}
+
+.layer-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.layer-heading span,
+.layer-heading i,
+.eyebrow b,
+.active-index,
+.page-summary b,
+.step-button span,
+.token-grid span {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+.layer-heading span {
+  color: currentColor;
+  font-size: 14px;
+  font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-.payload-formula {
-  display: grid;
-  gap: 5px;
-  padding: 9px 14px 11px;
-  border-top: 1px solid #343434;
-  background: rgba(15, 15, 15, 0.92);
-}
-
-.payload-formula span {
-  color: #34d399;
-  font-size: 9.5px;
-  font-weight: 900;
-  letter-spacing: 0.14em;
+.layer-heading i {
+  color: #cbd5e1;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.payload-formula b {
-  color: #f8fafc;
-  font-size: 12px;
-  line-height: 1.2;
+.token-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.token-grid span {
+  display: grid;
+  place-items: center;
+  min-height: 42px;
+  border: 1px solid color-mix(in srgb, currentColor 45%, transparent);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  color: color-mix(in srgb, currentColor 72%, white);
+  font-size: 16px;
+  font-weight: 850;
 }
 
 .control-pane {
@@ -333,7 +397,7 @@ function selectPart(id) {
   gap: 10px;
   min-width: 0;
   min-height: 0;
-  padding: 24px 40px 30px;
+  padding: 26px 42px 34px;
   background: #1c1c1c;
 }
 
@@ -341,7 +405,7 @@ function selectPart(id) {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .eyebrow span {
@@ -353,15 +417,15 @@ function selectPart(id) {
 
 .eyebrow b {
   color: #7a8290;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 900;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
 }
 
 .page-summary {
-  margin-bottom: 8px;
-  padding: 9px 12px;
+  margin-bottom: 10px;
+  padding: 10px 13px;
   border: 1px solid rgba(52, 211, 153, 0.26);
   border-radius: 10px;
   background: rgba(16, 35, 31, 0.52);
@@ -371,7 +435,7 @@ function selectPart(id) {
   display: block;
   margin-bottom: 6px;
   color: #34d399;
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 900;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -380,15 +444,15 @@ function selectPart(id) {
 .page-summary p {
   margin: 0;
   color: #d1d5db;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 650;
-  line-height: 1.24;
+  line-height: 1.28;
 }
 
 .active-card {
   position: relative;
-  min-height: 142px;
-  padding: 12px 16px;
+  min-height: 172px;
+  padding: 14px 18px;
   border: 1px solid #343434;
   border-radius: 14px;
   background: #252525;
@@ -396,7 +460,7 @@ function selectPart(id) {
 }
 
 .active-index {
-  margin-bottom: 5px;
+  margin-bottom: 6px;
   color: currentColor;
   font-size: 12px;
   font-weight: 900;
@@ -405,31 +469,31 @@ function selectPart(id) {
 }
 
 .active-card h1 {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: white;
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 850;
   letter-spacing: 0;
   line-height: 1.05;
 }
 
 .active-card p {
-  margin: 0 0 8px;
+  margin: 0 0 10px;
   color: #c9c9c9;
-  font-size: 11.5px;
+  font-size: 12.5px;
   font-weight: 650;
-  line-height: 1.25;
+  line-height: 1.3;
 }
 
 .active-card code {
   display: block;
-  padding: 7px 9px;
+  padding: 8px 10px;
   border: 1px solid #3a3a3a;
   border-radius: 8px;
   background: #171717;
   color: #e5e7eb;
-  font-size: 10px;
-  line-height: 1.25;
+  font-size: 10.5px;
+  line-height: 1.28;
   white-space: normal;
 }
 
@@ -444,7 +508,7 @@ function selectPart(id) {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 24px;
+  min-height: 26px;
   padding: 0 12px;
   border: 1px solid #333;
   border-radius: 8px;
@@ -470,7 +534,7 @@ function selectPart(id) {
 }
 
 .step-button span {
-  font-size: 9.5px;
+  font-size: 10px;
   font-weight: 800;
 }
 
@@ -531,18 +595,10 @@ function selectPart(id) {
     right: 28px;
   }
 
-  .payload-window {
-    width: 88%;
-    margin-top: 86px;
-  }
-
-  .payload-card {
-    grid-template-columns: 40px minmax(0, 1fr);
-  }
-
-  .payload-card small {
-    justify-self: start;
-    grid-column: 2;
+  .scene {
+    width: 380px;
+    height: 430px;
+    transform: scale(0.82);
   }
 
   .control-pane {
