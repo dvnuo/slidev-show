@@ -6,35 +6,35 @@ const steps = [
     id: 0,
     title: "Prompt",
     subtitle: "User intent",
-    desc: "The user gives the target, constraints, and acceptance criteria. This is the visible entry point of the work.",
+    desc: "The user gives the target, constraints, and acceptance criteria. This is the request that enters the extension stack.",
     accent: "neutral",
   },
   {
     id: 1,
     title: "Instructions",
     subtitle: "Operating rules",
-    desc: "System and workspace instructions shape behavior: safety, preferred commands, escalation, and output style.",
+    desc: "Instructions turn generic model behavior into team behavior: safety, preferred commands, escalation, and output style.",
     accent: "blue",
   },
   {
     id: 2,
     title: "Skills",
     subtitle: "Reusable playbooks",
-    desc: "Skills package repeatable workflows such as Jira setup, AWS profile discovery, incident triage, and review.",
+    desc: "Skills package repeated work into reusable playbooks, so setup, AWS access, triage, and review are repeatable.",
     accent: "violet",
   },
   {
     id: 3,
     title: "Tools And Memory",
-    subtitle: "Action + memory",
-    desc: "Tools let the agent act through trusted commands; memory keeps stable context, team rules, and reusable decisions available.",
+    subtitle: "Tools + Memory",
+    desc: "This is the extension core: tools let Copilot act through trusted commands, while memory keeps stable context and team decisions available.",
     accent: "emerald",
   },
   {
     id: 4,
     title: "Verification",
     subtitle: "Evidence loop",
-    desc: "The agent compares outputs with the goal, retries when needed, and returns command evidence instead of guesses.",
+    desc: "Verification closes the loop: the agent checks command output against the goal and returns evidence instead of guesses.",
     accent: "amber",
   },
 ];
@@ -71,6 +71,10 @@ function selectStep(id) {
 <template>
   <section class="agent-layer-visualizer" aria-label="Interactive agent operating layer visualizer">
     <div class="visual-pane">
+      <div class="visual-title">
+        <b>Copilot Extension Stack</b>
+        <span>Instructions and skills shape behavior; tools and memory make the agent useful.</span>
+      </div>
       <div class="scene" :style="{ perspective: `${camera.perspective}px` }">
         <div
           class="stack"
@@ -149,7 +153,12 @@ function selectStep(id) {
       <div>
         <div class="eyebrow">
           <span />
-          <b>Visualizer</b>
+          <b>Copilot Extension Stack</b>
+        </div>
+
+        <div class="page-summary">
+          <b>Main point</b>
+          <p>GitHub Copilot becomes an agent extension when it can act through tools, remember stable context, and verify each step.</p>
         </div>
 
         <div class="active-card" :class="`accent-${active.accent}`">
@@ -168,7 +177,7 @@ function selectStep(id) {
           :class="[{ active: item.id === activeStep }, `accent-${item.accent}`]"
           @click="selectStep(item.id)"
         >
-          <span>0{{ item.id + 1 }} / {{ item.subtitle }}</span>
+          <span>0{{ item.id + 1 }} / {{ item.title }}</span>
           <i />
         </button>
       </div>
@@ -188,6 +197,7 @@ function selectStep(id) {
 }
 
 .visual-pane {
+  position: relative;
   display: grid;
   place-items: center;
   min-width: 0;
@@ -196,6 +206,32 @@ function selectStep(id) {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.025), transparent 40%),
     #181818;
+}
+
+.visual-title {
+  position: absolute;
+  top: 34px;
+  left: 48px;
+  right: 48px;
+  z-index: 5;
+  max-width: 560px;
+}
+
+.visual-title b {
+  display: block;
+  color: #f8fafc;
+  font-size: 26px;
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.visual-title span {
+  display: block;
+  margin-top: 8px;
+  color: #9ca3af;
+  font-size: 12.5px;
+  font-weight: 650;
+  line-height: 1.28;
 }
 
 .scene {
@@ -432,18 +468,18 @@ function selectStep(id) {
   display: grid;
   grid-template-rows: auto minmax(0, auto);
   align-content: space-between;
-  gap: 14px;
+  gap: 12px;
   min-width: 0;
   min-height: 0;
-  padding: 38px 42px 58px;
+  padding: 26px 42px 34px;
   background: #1c1c1c;
 }
 
 .eyebrow {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 14px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .eyebrow span {
@@ -456,15 +492,42 @@ function selectStep(id) {
 .eyebrow b {
   color: #6b7280;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 19px;
-  letter-spacing: 0.22em;
+  font-size: 14px;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
+}
+
+.page-summary {
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(52, 211, 153, 0.26);
+  border-radius: 10px;
+  background: rgba(16, 35, 31, 0.52);
+}
+
+.page-summary b {
+  display: block;
+  margin-bottom: 6px;
+  color: #34d399;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, monospace;
+  font-size: 10.5px;
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.page-summary p {
+  margin: 0;
+  color: #d1d5db;
+  font-size: 14px;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .active-card {
   position: relative;
-  min-height: 166px;
-  padding: 22px 28px;
+  min-height: 118px;
+  padding: 14px 20px;
   border: 1px solid #343434;
   border-radius: 14px;
   background: #252525;
@@ -472,10 +535,10 @@ function selectStep(id) {
 }
 
 .active-index {
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   color: #14b8a6;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 15px;
+  font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -484,7 +547,7 @@ function selectStep(id) {
 .active-card h1 {
   margin: 0 0 10px;
   color: white;
-  font-size: 28px;
+  font-size: 20px;
   font-weight: 850;
   letter-spacing: 0;
   line-height: 1.1;
@@ -493,14 +556,14 @@ function selectStep(id) {
 .active-card p {
   margin: 0;
   color: #c9c9c9;
-  font-size: 16px;
+  font-size: 12.5px;
   font-weight: 650;
-  line-height: 1.4;
+  line-height: 1.3;
 }
 
 .step-list {
   display: grid;
-  gap: 5px;
+  gap: 4px;
   min-height: 0;
 }
 
@@ -509,8 +572,8 @@ function selectStep(id) {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  min-height: 32px;
-  padding: 0 16px;
+  min-height: 29px;
+  padding: 0 14px;
   border: 1px solid #333;
   border-radius: 8px;
   background: #202020;
@@ -536,7 +599,7 @@ function selectStep(id) {
 
 .step-button span {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-  font-size: 12.5px;
+  font-size: 11px;
   font-weight: 800;
 }
 
