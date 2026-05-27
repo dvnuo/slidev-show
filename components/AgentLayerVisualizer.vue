@@ -72,8 +72,9 @@ function layerStyle(part) {
   const depth = 48 + part.id * 62;
   const lift = part.id * 7;
   return {
-    opacity: visible ? 1 : 0.08,
+    opacity: visible ? 1 : 0,
     pointerEvents: visible ? "auto" : "none",
+    visibility: visible ? "visible" : "hidden",
     transform: `translate3d(${part.id * 7}px, ${lift}px, ${depth}px)`,
   };
 }
